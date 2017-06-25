@@ -27,7 +27,7 @@ Let's take a look at a quick example of using this package to send SMS:
 
     from pars_green import ParsGreenSmsServiceClient
     client = ParsGreenSmsServiceClient("YOUR_SIGNATURE")
-    print(client.send('SENDER_NUMBER', 'TO_NUMBER', 'TEXT', False))
+    print(client.send('SENDER_NUMBER', 'TO_NUMBER', 'TEXT'))
 
 # Documentation & Support
 
