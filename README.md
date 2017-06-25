@@ -33,6 +33,6 @@ You may also want to [follow the author on Twitter][twitter].
 
 [twitter]: https://twitter.com/mhipo1364
 [mail]: mailto:mhipo1364@gmail.com
-[pdf]: https://github.com/mhipo1364/pars-green/docs/parsgreen.pdf
+[pdf]: https://github.com/mhipo1364/pars-green/blob/master/docs/pdf/parsgreen.pdf
 [docs]: https://github.com/mhipo1364/pars-green/README.md
 [security-mail]: mailto:rest-framework-security@googlegroups.com
