@@ -25,7 +25,7 @@ class ParsGreenSmsServiceClient(object):
         return self.profile_client
 
     # Sending text messages method
-    def send(self, from_number, to, text, is_flash):
+    def send(self, from_number, to, text, is_flash=False):
         str_arr = self.sms_client.factory.create('ArrayOfString')
         str_arr.string = to
         self.retStr = self.sms_client.service.SendGroupSMS(
