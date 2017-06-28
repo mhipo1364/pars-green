@@ -8,6 +8,10 @@ class ParsGreenSmsServiceClient(object):
     scheduleServiceURL = 'http://login.parsgreen.com/Api/ScheduleService.asmx?WSDL'
 
     def __init__(self, signature):
+        """
+
+        :param signature:
+        """
         self.sms_client = Client(self.sendSmsURL)
         self.profile_client = Client(self.profileServiceURL)
         # on creating msg service client program crash
@@ -19,13 +23,29 @@ class ParsGreenSmsServiceClient(object):
         self.retStr = []
 
     def get_send_sms_client(self):
+        """
+        Get sms client data
+        :return:
+        """
         return self.sms_client
 
     def get_profile_client(self):
+        """
+        Get profile client
+        :return:
+        """
         return self.profile_client
 
     # Sending text messages method
     def send(self, from_number, to, text, is_flash=False):
+        """
+        Sending SMS
+        :param from_number:
+        :param to:
+        :param text:
+        :param is_flash:
+        :return:
+        """
         str_arr = self.sms_client.factory.create('ArrayOfString')
         str_arr.string = to
         self.retStr = self.sms_client.service.SendGroupSMS(
@@ -43,7 +63,7 @@ class ParsGreenSmsServiceClient(object):
     # Get delivery method
     def get_delivery(self, rec_id):
         """
-
+        Get delivery data
         :param rec_id:
         :return:
         """
@@ -52,7 +72,7 @@ class ParsGreenSmsServiceClient(object):
     # Get number of received text messages
     def get_message_count(self, location, is_read):
         """
-
+        Get message count
         :param location:
         :param is_read:
         :return:
@@ -62,7 +82,7 @@ class ParsGreenSmsServiceClient(object):
     # Delete either received or sent text messages
     def delete_message(self, encrypted_message_id):
         """
-
+        Delete message from Pars Green account
         :param encrypted_message_id:
         :return:
         """
@@ -142,4 +162,9 @@ class ParsGreenSmsServiceClient(object):
                                                              text, str_arr, from_number, encrypted_schedule_id)
 
     def delete_schedule(self, encrypted_schedule_id):
+        """
+
+        :param encrypted_schedule_id:
+        :return:
+        """
         return self.scheduleClient.service.DeleteSchedule(self.signature, encrypted_schedule_id)
