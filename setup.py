@@ -1,6 +1,6 @@
 """
 See:
-https://github.com/amirasaran/pars-green
+https://github.com/mhipo1364/pars-green
 """
 
 # Always prefer setuptools over distutils
