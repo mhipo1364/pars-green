@@ -1,26 +1,42 @@
-from suds.client import Client
+from zeep import Client
 
 
 class ParsGreenSmsServiceClient(object):
-    sendSmsURL = 'http://login.parsgreen.com/Api/SendSMS.asmx?WSDL'
-    profileServiceURL = 'http://login.parsgreen.com/Api/profileservice.asmx?WSDL'
-    msgServiceURL = 'http://login.parsgreen.com/Api/MsgService.asmx?WSDL'
-    scheduleServiceURL = 'http://login.parsgreen.com/Api/ScheduleService.asmx?WSDL'
+    SEND_SMS_URL = 'http://login.parsgreen.com/Api/SendSMS.asmx?WSDL'
+    PROFILE_SERVICE_URL = 'http://login.parsgreen.com/Api/profileservice.asmx?WSDL'
+    MSG_SERVICE_URL = 'http://login.parsgreen.com/Api/MsgService.asmx?WSDL'
+    SCHEDULE_SERVICE_URL = 'http://login.parsgreen.com/Api/ScheduleService.asmx?WSDL'
 
     def __init__(self, signature):
         """
-
         :param signature:
         """
-        self.sms_client = Client(self.sendSmsURL)
-        self.profile_client = Client(self.profileServiceURL)
-        # on creating msg service client program crash
-        self.scheduleClient = Client(self.scheduleServiceURL)
+        self._sms_client = None
+        self._profile_client = None
+        self._schedule_client = None
 
         self.signature = signature
         self.udh = ""
         self.success = 0x0
         self.retStr = []
+
+    @property
+    def sms_client(self):
+        if not self._sms_client:
+            self._sms_client = Client(self.SEND_SMS_URL)
+        return self._sms_client
+
+    @property
+    def profile_client(self):
+        if not self._profile_client:
+            self._profile_client = Client(self.PROFILE_SERVICE_URL)
+        return self._profile_client
+
+    @property
+    def schedule_client(self):
+        if not self._schedule_client:
+            self._schedule_client = Client(self.SCHEDULE_SERVICE_URL)
+        return self._schedule_client
 
     def get_send_sms_client(self):
         """
@@ -46,8 +62,8 @@ class ParsGreenSmsServiceClient(object):
         :param is_flash:
         :return:
         """
-        str_arr = self.sms_client.factory.create('ArrayOfString')
-        str_arr.string = to
+        array_of_string = self.schedule_client.get_type('ns0:ArrayOfString')
+        str_arr = array_of_string(to if isinstance(to, (tuple, list)) else [to])
         self.retStr = self.sms_client.service.SendGroupSMS(
             self.signature,
             from_number,
@@ -91,7 +107,6 @@ class ParsGreenSmsServiceClient(object):
     # Change text message as unread/read
     def get_message_change_is_read(self, location, is_read):
         """
-
         :param location:
         :param is_read:
         :return:
@@ -101,7 +116,6 @@ class ParsGreenSmsServiceClient(object):
     # Get either received or sent text messages
     def get_message(self, location, is_read):
         """
-
         :param location:
         :param is_read:
         :return:
@@ -111,7 +125,6 @@ class ParsGreenSmsServiceClient(object):
     # Get credit amount left in your account
     def get_credit(self):
         """
-
         :return:
         """
         return self.profile_client.service.GetCredit(self.signature)
@@ -119,7 +132,6 @@ class ParsGreenSmsServiceClient(object):
     # For transfer credit between from one account to another
     def transfer_credit(self, to_username, to_password, amount):
         """
-
         :param to_username:
         :param to_password:
         :param amount:
@@ -129,7 +141,6 @@ class ParsGreenSmsServiceClient(object):
 
     def register_schedule_daily(self, hour, minute, text, to, from_number, encrypted_schedule_id):
         """
-
         :param hour:
         :param minute:
         :param text:
@@ -138,14 +149,14 @@ class ParsGreenSmsServiceClient(object):
         :param encrypted_schedule_id:
         :return:
         """
-        str_arr = self.scheduleClient.factory.create('ArrayOfString')
-        str_arr.string = to
-        return self.scheduleClient.service.RegSchdeuleDaily(self.signature, hour, minute, text, str_arr, from_number,
-                                                            encrypted_schedule_id)
+        array_of_string = self.schedule_client.get_type('ns0:ArrayOfString')
+        str_arr = array_of_string(to if isinstance(to, (tuple, list)) else [to])
+        return self.schedule_client.service.RegSchdeuleDaily(self.signature, hour, minute, text, str_arr, from_number,
+                                                             encrypted_schedule_id)
 
-    def register_schedule_yearly(self, month_of_year, day_of_month, hour, minute, text, to, from_number, encrypted_schedule_id):
+    def register_schedule_yearly(self, month_of_year, day_of_month, hour, minute, text, to, from_number,
+                                 encrypted_schedule_id):
         """
-
         :param month_of_year: In Jalali Calendar
         :param day_of_month: In Jalali Calendar
         :param hour:
@@ -156,15 +167,14 @@ class ParsGreenSmsServiceClient(object):
         :param encrypted_schedule_id:
         :return:
         """
-        str_arr = self.scheduleClient.factory.create('ArrayOfString')
-        str_arr.string = to
-        return self.scheduleClient.service.RegSchdeuleYearly(self.signature, month_of_year, day_of_month, hour, minute,
-                                                             text, str_arr, from_number, encrypted_schedule_id)
+        array_of_string = self.schedule_client.get_type('ns0:ArrayOfString')
+        str_arr = array_of_string(to if isinstance(to, (tuple, list)) else [to])
+        return self.schedule_client.service.RegSchdeuleYearly(self.signature, month_of_year, day_of_month, hour, minute,
+                                                              text, str_arr, from_number, encrypted_schedule_id)
 
     def delete_schedule(self, encrypted_schedule_id):
         """
-
         :param encrypted_schedule_id:
         :return:
         """
-        return self.scheduleClient.service.DeleteSchedule(self.signature, encrypted_schedule_id)
+        return self.schedule_client.service.DeleteSchedule(self.signature, encrypted_schedule_id)
