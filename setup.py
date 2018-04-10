@@ -17,7 +17,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='pars-green',
-    version='1.1.0',
+    version='1.1.1',
     description='Python Pars Green',
     long_description=long_description,
     url='https://github.com/mhipo1364/pars-green',
@@ -50,5 +50,5 @@ setup(
     packages=['pars_green'],
     # What does your project relate to?
     keywords='pars green soap',
-    install_requires=['suds>=0.4'],
+    install_requires=['zeep==2.5.0'],
 )
